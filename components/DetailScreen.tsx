@@ -1,4 +1,4 @@
-import { View, TextInput, StyleSheet, Text,Button } from 'react-native';
+import { View, StyleSheet,Text } from 'react-native';
 import WeatherModal from '../Modal/WeatherModal';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 

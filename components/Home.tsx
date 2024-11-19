@@ -1,15 +1,18 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { View, TextInput, StyleSheet, Text, Button, FlatList, Alert, TouchableOpacity } from 'react-native';
+import React, {useState, useEffect, useCallback, useMemo} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Button,
+  FlatList,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import InputComponent from './InputComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import debounce from 'lodash.debounce';
 import uuid from 'react-native-uuid';
 
-
-const Home = ({ navigation }) => {
-  const [data, setData] = useState<WeatherModal | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const Home = ({navigation}) => {
   const [inputVal, setInputVal] = useState('');
   const [cityData, setCityData] = useState<string[]>([]);
 
@@ -18,19 +21,22 @@ const Home = ({ navigation }) => {
   }, [cityData]);
 
   // Memoizing the appendData function to avoid re-creating it on every render
-  const appendData = useCallback(async (city: string) => {
-    try {
-      const storedData = await AsyncStorage.getItem('userData');
-      let updatedData = storedData ? JSON.parse(storedData) : [];
-      const newCity = { id: uuid.v4(), name: city };
-      updatedData.push(newCity);
-      await AsyncStorage.setItem('userData', JSON.stringify(updatedData));
-      const uniqueArray = Array.from(new Set(updatedData));
-      setCityData(uniqueArray);
-    } catch (error) {
-      console.error('Error appending data', error);
-    }
-  }, [cityData]);
+  const appendData = useCallback(
+    async (city: string) => {
+      try {
+        const storedData = await AsyncStorage.getItem('userData');
+        let updatedData = storedData ? JSON.parse(storedData) : [];
+        const newCity = {id: uuid.v4(), name: city};
+        updatedData.push(newCity);
+        await AsyncStorage.setItem('userData', JSON.stringify(updatedData));
+        const uniqueArray = Array.from(new Set(updatedData));
+        setCityData(uniqueArray);
+      } catch (error) {
+        console.error('Error appending data', error);
+      }
+    },
+    [cityData],
+  );
 
   const deleteItem = async (id: string) => {
     try {
@@ -44,8 +50,8 @@ const Home = ({ navigation }) => {
 
   const handleDelete = (id: string) => {
     Alert.alert('Delete Item', 'Are you sure you want to delete this item?', [
-      { text: 'Cancel', style: 'cancel' },
-      { text: 'OK', onPress: () => deleteItem(id) },
+      {text: 'Cancel', style: 'cancel'},
+      {text: 'OK', onPress: () => deleteItem(id)},
     ]);
   };
 
@@ -60,12 +66,10 @@ const Home = ({ navigation }) => {
     }
   }, []);
 
-  const debouncedFetchResults = useCallback(debounce((nextValue) => fetchData(nextValue), 500), []);
-
   const fetchData = async (inputStr: string) => {
     try {
       let apiQuery = `q=${inputStr}`;
-      let apiId = "d7b950541d7264a3b3df80a8b6f2cbf7";
+      let apiId = 'd7b950541d7264a3b3df80a8b6f2cbf7';
       let apiUrlresult = `https://api.openweathermap.org/data/2.5/weather?${apiQuery}&appid=${apiId}`;
       const response = await fetch(apiUrlresult);
       if (!response.ok) {
@@ -89,21 +93,20 @@ const Home = ({ navigation }) => {
   };
 
   const renderItem = useCallback(
-    ({ item }) => (
+    ({item}) => (
       <TouchableOpacity
         onLongPress={() => handleDelete(item.id)}
-        onPress={() => navigation.navigate('Details', { item })}
+        onPress={() => navigation.navigate('Details', {item})}
         style={{
           padding: 15,
           marginBottom: 10,
           backgroundColor: '#f0f0f0',
           borderRadius: 5,
-        }}
-      >
+        }}>
         <Text>{item.name}</Text>
       </TouchableOpacity>
     ),
-    [cityData] // Memoizing to ensure this function is not recreated unless cityData changes
+    [cityData], // Memoizing to ensure this function is not recreated unless cityData changes
   );
 
   const memoizedData = useMemo(() => {
@@ -113,15 +116,11 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <InputComponent onTextChange={handleTextChange} />
-      <Button
-        title="Add city"
-        onPress={apiCallButtonPressed}
-        color="#841584"
-      />
+      <Button title="Add city" onPress={apiCallButtonPressed} color="#841584" />
       <FlatList
         data={memoizedData}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={item => item.id}
       />
     </View>
   );
