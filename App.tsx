@@ -28,6 +28,7 @@ import Home from './components/Home';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import DetailScreen from './components/DetailScreen';
+import FilterPage from './components/FilterPage';
 
 
 function App(): React.JSX.Element {
@@ -43,6 +44,7 @@ function App(): React.JSX.Element {
     <Stack.Navigator>
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Details" component={DetailScreen} />
+      <Stack.Screen name="FilterPage" component={FilterPage} />
     </Stack.Navigator>
   </NavigationContainer>
     // <SafeAreaView style={backgroundStyle}>

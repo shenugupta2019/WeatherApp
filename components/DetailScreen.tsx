@@ -1,8 +1,8 @@
-import { View, StyleSheet,Text } from 'react-native';
+import { View, StyleSheet,Text ,Button} from 'react-native';
 import WeatherModal from '../Modal/WeatherModal';
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 
-const DetailScreen = ({route}) => {
+const DetailScreen = ({route,navigation}) => {
     const [data, setData] = useState<WeatherModal | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -13,6 +13,11 @@ const DetailScreen = ({route}) => {
     useEffect(() => {
       fetchData(item.name);
     }, []);
+
+    const navigateToFilterPage = () => {
+      navigation.navigate('FilterPage', {item})
+    };
+  
 
     const fetchData = async (inputStr: string) => {
       try {
@@ -33,6 +38,7 @@ const DetailScreen = ({route}) => {
     };
   return (
     <View style={styles.container}>
+   <Button title="Navigate to Filter Page" onPress={navigateToFilterPage} color="#841584" />
    <Text style={styles.text}>{data?.clouds.all}</Text>
    <Text style={styles.text}>{data?.name}</Text>
    <Text style={styles.text}>{data?.coord.lat}</Text>
