@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import {
   View,
   Text,
@@ -18,11 +18,21 @@ const PRODUCTS = [
   {id: 4, name: 'Watch', category: 'Accessories', price: 100, brand: 'Casio'},
 ];
 const productNames = PRODUCTS.map(product => product.name);
-const FilterPage = () => {
+const FilterPage = ( { selectedValue, setSelectedValue }) => {
   const [filteredProducts, setFilteredProducts] = useState(PRODUCTS);
   const [query, setQuery] = useState('');
   const [priceRange, setPriceRange] = useState([0, 1000]); // [min, max]
-  const [selectedOption, setSelectedOption] = useState<string>('');
+//   const [selectedValue, setSelectedValue] = useState(
+//     route.params?.selectedValue || null // Initialize with passed parameter
+//   );
+
+//    // Save state to navigation params before unmounting
+//    useEffect(() => {
+//     return () => {
+//         navigation.setParams({ selectedValue: selectedValue }); // Update navigation params
+//     };
+//   }, [selectedValue, navigation]);
+
 
   const applyFilters = () => {
     const filtered = PRODUCTS.filter(product => {
@@ -36,12 +46,16 @@ const FilterPage = () => {
     setFilteredProducts(filtered);
   };
 
+  const handleDropdownChange = (value) => {
+    setSelectedValue(value);
+   
+  };
+
   return (
     <View style={styles.container}>
       <Dropdown
-        options={productNames}
-        selectedValue={selectedOption}
-        onValueChange={value => setSelectedOption(value)}
+        selectedValue={selectedValue}
+        onValueChange={handleDropdownChange}
       />
     </View>
   );

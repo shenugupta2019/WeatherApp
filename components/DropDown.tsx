@@ -1,25 +1,23 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
-// Define the types for props
-interface DropdownProps {
-  options: string[];
-  selectedValue: string;
-  onValueChange: (value: string) => void;
-}
+const Dropdown = ({ selectedValue, onValueChange }) => {
+  const options = [
+    { label: "Option 1", value: "1" },
+    { label: "Option 2", value: "2" },
+    { label: "Option 3", value: "3" },
+  ];
 
-const Dropdown: React.FC<DropdownProps> = ({ options, selectedValue, onValueChange }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Select an Option:</Text>
       <Picker
         selectedValue={selectedValue}
         onValueChange={(value) => onValueChange(value)}
         style={styles.picker}
       >
-        {options.map((option, index) => (
-          <Picker.Item key={index} label={option} value={option} />
+        {options.map((option) => (
+          <Picker.Item label={option.label} value={option.value} key={option.value} />
         ))}
       </Picker>
     </View>
@@ -28,12 +26,10 @@ const Dropdown: React.FC<DropdownProps> = ({ options, selectedValue, onValueChan
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
-    width: "100%",
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    width: 200,
   },
   picker: {
     height: 50,

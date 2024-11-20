@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React,{useState} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -29,11 +29,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import DetailScreen from './components/DetailScreen';
 import FilterPage from './components/FilterPage';
+import BookComponent from './components/BookComponent';
 
 
 function App(): React.JSX.Element {
   const Stack = createStackNavigator();
   const isDarkMode = useColorScheme() === 'dark';
+  const [selectedValue, setSelectedValue] = useState(null); // Shared state for dropdown
+
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -42,9 +45,14 @@ function App(): React.JSX.Element {
   return (
     <NavigationContainer>
     <Stack.Navigator>
+      {/* <Stack.Screen name="Book" component={BookComponent} /> */}
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Details" component={DetailScreen} />
-      <Stack.Screen name="FilterPage" component={FilterPage} />
+      <Stack.Screen name="FilterPage">
+          {(props) => (
+            <FilterPage {...props} selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+          )}
+        </Stack.Screen>
     </Stack.Navigator>
   </NavigationContainer>
     // <SafeAreaView style={backgroundStyle}>
