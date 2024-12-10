@@ -11,8 +11,15 @@ import {
 import InputComponent from './InputComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import uuid from 'react-native-uuid';
+import {
+  withAuthenticator,
+  useAuthenticator
+} from '@aws-amplify/ui-react-native';
+
 
 const Home = ({navigation}) => {
+  const userSelector = (context) => [context.user];
+  const { user, signOut } = useAuthenticator(userSelector);
   const [inputVal, setInputVal] = useState('');
   const [cityData, setCityData] = useState<string[]>([]);
 
@@ -88,6 +95,11 @@ const Home = ({navigation}) => {
     appendData(inputVal);
   };
 
+  const signOutButton =() => {
+    signOut()
+
+  }
+
   const handleTextChange = (text: string) => {
     setInputVal(text);
   };
@@ -116,7 +128,8 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
       <InputComponent onTextChange={handleTextChange} />
-      <Button title="Add city" onPress={apiCallButtonPressed} color="#841584" />
+      {/* <Button title="Add city" onPress={apiCallButtonPressed} color="#841584" /> */}
+      <Button title="Sign Out" onPress={signOutButton} color="#841584" />
       <FlatList
         data={memoizedData}
         renderItem={renderItem}
@@ -159,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default withAuthenticator(Home);
